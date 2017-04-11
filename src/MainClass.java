@@ -1,4 +1,5 @@
 import classes.CaseInsensitiveTreeMap;
+import classes.GenericCouple;
 
 import java.util.Map;
 
@@ -7,12 +8,13 @@ import java.util.Map;
  */
 public class MainClass {
     public static void main(String[] rgs) {
-        CaseInsensitiveTreeMap<Double,Double> map = new CaseInsensitiveTreeMap<>();
-        map.put(1D,0D);
-        map.put(1.1D,1D);
-        for(Map.Entry<Double,Double> entry : map.entrySet()) {
-            System.out.println(entry.getKey() + " + " + entry.getValue());
-        }
+        CaseInsensitiveTreeMap<GenericCouple<Double,Double>,Double> map = new CaseInsensitiveTreeMap<>();
+        map.put(new GenericCouple<>(1D,2D),0D);
+        map.put(new GenericCouple<>(1D,2D),1D);
+        map.entrySet().forEach(e -> {
+            System.out.println(e.getKey());
+        });
+
 
     }
 }

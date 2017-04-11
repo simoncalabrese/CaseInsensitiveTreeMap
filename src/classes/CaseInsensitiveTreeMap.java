@@ -22,8 +22,18 @@ public class CaseInsensitiveTreeMap<K, V> implements Map<K, V> {
 
     private class CITreeMap<K extends CaseInsensitiveString, V> extends TreeMap<K, V> {
 
+        /**
+         *
+         */
+        private static final long serialVersionUID = 44740158237567261L;
+
         public CITreeMap() {
             super(new CaseInsensitiveComparator<K>());
+        }
+
+        @Override
+        public V get(Object key) {
+            return super.get((K) key);
         }
 
         public boolean containsAndIsNotnull(final K key) {
@@ -49,6 +59,7 @@ public class CaseInsensitiveTreeMap<K, V> implements Map<K, V> {
     }
 
     public V put(K key, V value) {
+        mapOriginal.put(key, value);
         return map.put(new CaseInsensitiveString<>(key), value);
     }
 
@@ -64,16 +75,12 @@ public class CaseInsensitiveTreeMap<K, V> implements Map<K, V> {
         return map.containsValue(value);
     }
 
-    public V get(Object key) {
-        return map.get(key);
-    }
-
     public <G> Object safeGetByMap(final K key, final G defaultValue) {
         return map.safeGetByMap(new CaseInsensitiveString<>(key), defaultValue);
     }
 
     public <G> Object safeGetByMap(final K key) {
-        return map.safeGetByMap(new CaseInsensitiveString<>(key), null);
+        return map.safeGetByMap(new CaseInsensitiveString<>(key));
     }
 
     public boolean containsAndIsNotnull(final K key) {
@@ -81,9 +88,6 @@ public class CaseInsensitiveTreeMap<K, V> implements Map<K, V> {
     }
 
     public Set<Map.Entry<K, V>> entrySet() {
-        for (Map.Entry<CaseInsensitiveString<K>, V> entry : map.entrySet()) {
-            mapOriginal.put(entry.getKey().getOriginalValue(), entry.getValue());
-        }
         return mapOriginal.entrySet();
     }
 
@@ -121,5 +125,14 @@ public class CaseInsensitiveTreeMap<K, V> implements Map<K, V> {
     @Override
     public Collection<V> values() {
         return map.values();
+    }
+
+    private V getInMap(K key) {
+        return map.get(new CaseInsensitiveString<K>(key));
+    }
+
+    @Override
+    public V get(Object key) {
+        return getInMap((K) key);
     }
 }
